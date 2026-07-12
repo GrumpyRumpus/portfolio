@@ -218,7 +218,7 @@
           <div class="showcase-body">
             <div class="showcase-text">
               <h3 class="showcase-title">Crystal Battle</h3>
-              <p class="showcase-desc">AlphaZero-style battle agent for Gen 2 OU. The search core is <strong>Monte Carlo Tree Search</strong> guided by neural-network policy priors (PUCT selection), backed by expectiminimax with alpha-beta pruning and a custom, matchup-aware evaluation at the leaves. Behind it runs a full training pipeline: self-play generation, human-replay scraping (1,962 ladder games), a <strong>579-dimensional</strong> per-state feature extractor, and policy/value nets trained in PyTorch then exported to <code>ONNX</code> for fast Rust-side inference. The trained agent plays live on Pokemon Showdown over a websocket connection.</p>
+              <p class="showcase-desc">Competitive Pokemon battling agent for Gen 9 OU and Monotype. Instead of trusting one guess about the opponent's partly-hidden team, each turn it samples several plausible completions from Smogon usage statistics, runs one <strong>Monte Carlo Tree Search</strong> per sampled world over a Rust battle engine, and merges the results; observational set inference (speed floors, damage brackets) sharpens those beliefs as the battle reveals evidence. Team preview and forced switches are searched, not picked by heuristic. A translation layer validated on <strong>4,917/4,917</strong> real ladder turns feeds live play on Pokemon Showdown, where every change is A/B benchmarked head-to-head against <strong>foul-play, winner of the NeurIPS 2025 PokeAgent Challenge</strong>. Also in the repo: trained lead-picker and move-prediction nets, an exhaustive endgame solver, and honestly-documented negative results from the self-play distillation arc.</p>
               <div class="project-tags">
                 <span class="tag tag-peach">Rust</span>
                 <span class="tag tag-green">Python</span>
@@ -232,7 +232,7 @@
               </div>
             </div>
           </div>
-          <div class="showcase-diagram" role="img" aria-label="Crystal Battle pipeline: data from replays and self-play, 579-dim feature extraction, policy and value nets trained in PyTorch and exported to ONNX, MCTS + minimax search, live play on Pokemon Showdown">
+          <div class="showcase-diagram" role="img" aria-label="Crystal Battle pipeline: Smogon usage priors and in-battle set inference produce sampled opponent worlds; one MCTS per world runs over a Rust engine and the visit counts merge; the agent plays live on Pokemon Showdown, A/B benchmarked against foul-play, the NeurIPS 2025 PokeAgent Challenge winner">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 190" fill="none">
               <style>
                 .cb-label { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 11px; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
@@ -247,31 +247,31 @@
                 </marker>
               </defs>
               <rect width="720" height="190" fill="var(--surface0)" rx="8" ry="8" opacity="0.5" />
-              <text x="91" y="24" class="cb-group">DATA</text>
-              <text x="271" y="24" class="cb-group">FEATURES</text>
-              <text x="461" y="24" class="cb-group">TRAIN</text>
-              <!-- top row: data -> features -> nets -->
+              <text x="91" y="24" class="cb-group">PRIORS</text>
+              <text x="271" y="24" class="cb-group">INFERENCE</text>
+              <text x="461" y="24" class="cb-group">SAMPLE</text>
+              <!-- top row: stats -> set inference -> opponent worlds -->
               <rect x="16" y="44" width="150" height="50" class="cb-box" fill="var(--base)" stroke="var(--green)" />
-              <text x="91" y="64" class="cb-label" fill="var(--green)">data</text>
-              <text x="91" y="80" class="cb-sub">replays + self-play</text>
+              <text x="91" y="64" class="cb-label" fill="var(--green)">Smogon stats</text>
+              <text x="91" y="80" class="cb-sub">usage &#183; sets &#183; spreads</text>
               <rect x="196" y="44" width="150" height="50" class="cb-box" fill="var(--base)" stroke="var(--sky)" />
-              <text x="271" y="64" class="cb-label" fill="var(--sky)">579-dim features</text>
-              <text x="271" y="80" class="cb-sub">per battle state</text>
+              <text x="271" y="64" class="cb-label" fill="var(--sky)">set inference</text>
+              <text x="271" y="80" class="cb-sub">speed + damage evidence</text>
               <rect x="376" y="44" width="170" height="50" class="cb-box" fill="var(--base)" stroke="var(--mauve)" />
-              <text x="461" y="64" class="cb-label" fill="var(--mauve)">policy + value nets</text>
-              <text x="461" y="80" class="cb-sub">PyTorch &#183; 88% acc</text>
+              <text x="461" y="64" class="cb-label" fill="var(--mauve)">K opponent worlds</text>
+              <text x="461" y="80" class="cb-sub">sampled team completions</text>
               <path d="M166,69 L196,69" class="cb-arrow" stroke="var(--surface2)" />
               <path d="M346,69 L376,69" class="cb-arrow" stroke="var(--surface2)" />
               <!-- second row: search -> showdown -->
               <rect x="196" y="122" width="210" height="50" class="cb-box" fill="var(--base)" stroke="var(--lavender)" />
-              <text x="301" y="142" class="cb-label" fill="var(--lavender)">MCTS + minimax</text>
-              <text x="301" y="158" class="cb-sub">PUCT priors &#183; &#945;&#946; &#183; matchup eval</text>
+              <text x="301" y="142" class="cb-label" fill="var(--lavender)">MCTS per world</text>
+              <text x="301" y="158" class="cb-sub">Rust engine &#183; merged visits</text>
               <rect x="436" y="122" width="170" height="50" class="cb-box" fill="var(--base)" stroke="var(--red)" />
               <text x="521" y="142" class="cb-label" fill="var(--red)">Pokemon Showdown</text>
-              <text x="521" y="158" class="cb-sub">live websocket</text>
-              <!-- nets -> (ONNX) -> search -->
+              <text x="521" y="158" class="cb-sub">live &#183; A/B vs foul-play</text>
+              <!-- worlds -> search -->
               <path d="M461,94 L461,108 L301,108 L301,122" class="cb-arrow" stroke="var(--peach)" />
-              <text x="392" y="102" class="cb-sub" fill="var(--peach)">ONNX export</text>
+              <text x="392" y="102" class="cb-sub" fill="var(--peach)">one search each</text>
               <path d="M406,147 L436,147" class="cb-arrow" stroke="var(--surface2)" />
             </svg>
           </div>
