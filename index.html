@@ -351,13 +351,14 @@
           <div class="showcase-body">
             <div class="showcase-text">
               <h3 class="showcase-title">grounded-rag</h3>
-              <p class="showcase-desc">Local, citation-grounded question answering over any document corpus. Ask a question, get an answer that <strong>quotes its sources</strong> with inline <code>[1][2]</code> citations, and says "I don't know" when the retrieved context doesn't support one. Documents are chunked with overlap, embedded via Ollama, and stored in Postgres + pgvector; a tuned similarity gate refuses rather than hallucinates, and a strict grounding prompt keeps the streamed Gemma answer inside the retrieved passages. Built around an <strong>evaluation harness</strong> (30 gold questions scoring retrieval hit-rate@k, answer faithfulness, and refusal precision, currently <strong>100% on all three</strong>) that has already caught and driven the fix for two real failure classes: a refusal threshold that never fired, and corpus-wide aggregation questions that no top-k retrieval can answer. Runs entirely locally on a single GPU; FastAPI backend, React/TS frontend, Docker Compose and k8s manifests.</p>
+              <p class="showcase-desc">Citation-grounded question answering, grown into a four-corpus Pokemon expert: Smogon usage statistics, PokeAPI data, Bulbapedia prose, and Smogon strategy analyses (~23k chunks, all local). Questions route through <strong>hybrid retrieval</strong> (vector + IDF-selected keyword search, reciprocal rank fusion) with a <strong>cross-encoder reranker</strong> that also scores the "I don't know" refusal gate, or to deterministic tools backed by the poke-engine battle engine: type matchups with conditional immunities, true damage calcs with battle state (boosts, items, weather, Tera, real Smogon sets), and tiered "what would it take to OHKO, or to survive?" escalation searches. Answers cross-reference themselves (a damage calc into Bronzong warns that Levitate appears on 95% of its observed sets) and cite full provenance, down to sources the answer itself introduces. Built eval-first: <strong>77 gold questions at 100% retrieval, faithfulness, and refusal</strong>, with every regression corpus growth produced caught by the harness and pinned by its own gold question.</p>
               <div class="project-tags">
                 <span class="tag tag-green">Python</span>
                 <span class="tag tag-peach">FastAPI</span>
                 <span class="tag tag-blue">React / TS</span>
                 <span class="tag tag-mauve">Postgres + pgvector</span>
                 <span class="tag tag-sky">Ollama</span>
+                <span class="tag tag-green">Cross-encoder</span>
                 <span class="tag tag-teal">Docker / k8s</span>
               </div>
               <div class="showcase-links">
@@ -365,8 +366,8 @@
               </div>
             </div>
           </div>
-          <div class="showcase-diagram" role="img" aria-label="grounded-rag pipeline: ingest documents by chunking and embedding into Postgres pgvector; queries embed, vector-retrieve through a refusal gate, and generate a cited answer with Gemma; an eval harness measures hit-rate, faithfulness, and refusal precision">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" fill="none">
+          <div class="showcase-diagram" role="img" aria-label="grounded-rag pipeline: four corpora are embedded into Postgres pgvector; queries pass a router that either runs hybrid retrieval with a cross-encoder reranker and refusal gate, or calls poke-engine battle tools; Gemma writes the cited answer; an eval harness of 77 gold questions measures hit-rate, faithfulness, and refusal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 258" fill="none">
               <style>
                 .gr-label { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 11px; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
                 .gr-sub { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 8px; fill: var(--subtext0); text-anchor: middle; dominant-baseline: central; }
@@ -379,41 +380,40 @@
                   <path d="M0,0 L8,3 L0,6" fill="var(--surface2)" />
                 </marker>
               </defs>
-              <rect width="720" height="200" fill="var(--surface0)" rx="8" ry="8" opacity="0.5" />
-              <!-- Ingest -->
-              <text x="120" y="22" class="gr-group">INGEST</text>
-              <rect x="16" y="36" width="120" height="48" class="gr-box" fill="var(--base)" stroke="var(--green)" />
-              <text x="76" y="54" class="gr-label" fill="var(--green)">documents</text>
-              <text x="76" y="70" class="gr-sub">chunk + overlap</text>
-              <rect x="156" y="36" width="120" height="48" class="gr-box" fill="var(--base)" stroke="var(--sky)" />
-              <text x="216" y="54" class="gr-label" fill="var(--sky)">embed</text>
-              <text x="216" y="70" class="gr-sub">Ollama</text>
-              <rect x="296" y="36" width="150" height="48" class="gr-box" fill="var(--base)" stroke="var(--blue)" />
-              <text x="371" y="54" class="gr-label" fill="var(--blue)">Postgres</text>
-              <text x="371" y="70" class="gr-sub">+ pgvector</text>
-              <path d="M136,60 L156,60" class="gr-arrow" stroke="var(--surface2)" />
-              <path d="M276,60 L296,60" class="gr-arrow" stroke="var(--surface2)" />
-              <!-- eval -->
-              <rect x="476" y="36" width="228" height="48" class="gr-box" fill="var(--base)" stroke="var(--yellow)" />
-              <text x="590" y="54" class="gr-label" fill="var(--yellow)">eval harness</text>
-              <text x="590" y="70" class="gr-sub">hit-rate &#183; faithfulness &#183; refusal</text>
-              <!-- Query -->
-              <text x="120" y="112" class="gr-group">QUERY</text>
-              <rect x="16" y="124" width="120" height="48" class="gr-box" fill="var(--base)" stroke="var(--mauve)" />
-              <text x="76" y="142" class="gr-label" fill="var(--mauve)">query</text>
-              <text x="76" y="158" class="gr-sub">embed</text>
-              <rect x="156" y="124" width="160" height="48" class="gr-box" fill="var(--base)" stroke="var(--sky)" />
-              <text x="236" y="142" class="gr-label" fill="var(--sky)">vector retrieve</text>
-              <text x="236" y="158" class="gr-sub">cosine top-k &#8594; refusal gate</text>
-              <rect x="336" y="124" width="160" height="48" class="gr-box" fill="var(--base)" stroke="var(--peach)" />
-              <text x="416" y="142" class="gr-label" fill="var(--peach)">Gemma answer</text>
-              <text x="416" y="158" class="gr-sub">+ [citations]</text>
-              <path d="M136,148 L156,148" class="gr-arrow" stroke="var(--surface2)" />
-              <path d="M316,148 L336,148" class="gr-arrow" stroke="var(--surface2)" />
+              <rect width="720" height="258" fill="var(--surface0)" rx="8" ry="8" opacity="0.5" />
+              <text x="106" y="22" class="gr-group">INGEST</text>
+              <text x="605" y="22" class="gr-group">EVAL</text>
+              <rect x="16" y="36" width="180" height="48" class="gr-box" fill="var(--base)" stroke="var(--green)" />
+              <text x="106" y="54" class="gr-label" fill="var(--green)">4 corpora</text>
+              <text x="106" y="70" class="gr-sub">usage &#183; dex &#183; wiki &#183; strategy</text>
+              <rect x="226" y="36" width="170" height="48" class="gr-box" fill="var(--base)" stroke="var(--blue)" />
+              <text x="311" y="54" class="gr-label" fill="var(--blue)">embed &#8594; pgvector</text>
+              <text x="311" y="70" class="gr-sub">Ollama &#183; ~23k chunks</text>
+              <rect x="506" y="36" width="198" height="48" class="gr-box" fill="var(--base)" stroke="var(--yellow)" />
+              <text x="605" y="54" class="gr-label" fill="var(--yellow)">eval harness</text>
+              <text x="605" y="70" class="gr-sub">77 gold questions &#183; 100/100/100</text>
+              <path d="M196,60 L226,60" class="gr-arrow" stroke="var(--surface2)" />
+              <text x="56" y="106" class="gr-group">QUERY</text>
+              <rect x="16" y="120" width="80" height="48" class="gr-box" fill="var(--base)" stroke="var(--mauve)" />
+              <text x="56" y="144" class="gr-label" fill="var(--mauve)">query</text>
+              <rect x="126" y="120" width="90" height="48" class="gr-box" fill="var(--base)" stroke="var(--sky)" />
+              <text x="171" y="144" class="gr-label" fill="var(--sky)">router</text>
+              <rect x="246" y="120" width="200" height="48" class="gr-box" fill="var(--base)" stroke="var(--teal)" />
+              <text x="346" y="138" class="gr-label" fill="var(--teal)">hybrid retrieve &#183; rerank</text>
+              <text x="346" y="154" class="gr-sub">RRF &#183; refusal gate</text>
+              <rect x="476" y="120" width="228" height="48" class="gr-box" fill="var(--base)" stroke="var(--peach)" />
+              <text x="590" y="138" class="gr-label" fill="var(--peach)">Gemma answer</text>
+              <text x="590" y="154" class="gr-sub">+ [citations] &#183; expanding sources</text>
+              <path d="M96,144 L126,144" class="gr-arrow" stroke="var(--surface2)" />
+              <path d="M216,144 L246,144" class="gr-arrow" stroke="var(--surface2)" />
+              <path d="M446,144 L476,144" class="gr-arrow" stroke="var(--surface2)" />
+              <rect x="126" y="194" width="250" height="48" class="gr-box" fill="var(--base)" stroke="var(--red)" />
+              <text x="251" y="212" class="gr-label" fill="var(--red)">poke-engine battle tools</text>
+              <text x="251" y="228" class="gr-sub">damage calcs &#183; matchups &#183; OHKO search</text>
+              <path d="M171,168 L171,194" class="gr-arrow" stroke="var(--red)" />
+              <path d="M376,218 L590,218 L590,168" class="gr-arrow" stroke="var(--red)" />
               <!-- store feeds retrieval -->
-              <path d="M371,84 L371,148 L336,148" class="gr-arrow" stroke="var(--surface2)" />
-              <!-- eval measures answers (dashed) -->
-              <path d="M496,128 L560,90" stroke="var(--yellow)" stroke-width="1" stroke-dasharray="3" fill="none" opacity="0.7" />
+              <path d="M311,84 L311,102 L346,102 L346,120" class="gr-arrow" stroke="var(--surface2)" />
             </svg>
           </div>
         </article>
