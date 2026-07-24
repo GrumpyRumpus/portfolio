@@ -351,7 +351,7 @@
           <div class="showcase-body">
             <div class="showcase-text">
               <h3 class="showcase-title">grounded-rag</h3>
-              <p class="showcase-desc">Citation-grounded question answering, grown into a four-corpus Pokemon expert: Smogon usage statistics, PokeAPI data, Bulbapedia prose, and Smogon strategy analyses (~23k chunks, all local). Questions route through <strong>hybrid retrieval</strong> (vector + IDF-selected keyword search, reciprocal rank fusion) with a <strong>cross-encoder reranker</strong> that also scores the "I don't know" refusal gate, or to deterministic tools backed by the poke-engine battle engine: type matchups with conditional immunities, true damage calcs with battle state (boosts, items, weather, Tera, real Smogon sets), and tiered "what would it take to OHKO, or to survive?" escalation searches. Answers cross-reference themselves (a damage calc into Bronzong warns that Levitate appears on 95% of its observed sets) and cite full provenance, down to sources the answer itself introduces. Built eval-first: <strong>77 gold questions at 100% retrieval, faithfulness, and refusal</strong>, with every regression corpus growth produced caught by the harness and pinned by its own gold question.</p>
+              <p class="showcase-desc">Citation-grounded question answering, grown into a four-corpus Pokemon expert: Smogon usage statistics, PokeAPI data, Bulbapedia prose, and Smogon strategy analyses (~25k chunks, all local). Questions route through <strong>hybrid retrieval</strong> (vector + IDF-selected keyword search, reciprocal rank fusion) with a <strong>cross-encoder reranker</strong> that also scores the "I don't know" refusal gate, or to deterministic tools backed by the poke-engine battle engine: type matchups with conditional immunities, true damage calcs with battle state (boosts, items, weather, Tera, real Smogon sets), and tiered "what would it take to OHKO, or to survive?" escalation searches. Answers cross-reference themselves (a damage calc into Bronzong warns that Levitate appears on 95% of its observed sets) and cite full provenance, down to sources the answer itself introduces. Built eval-first: <strong>108 gold questions at 100% retrieval, faithfulness, and refusal</strong>, cross-checked against 237 frozen paraphrases with zero ungrounded entity mentions across every generated answer, so each corpus-growth regression is caught by the harness and pinned by its own gold question.</p>
               <div class="project-tags">
                 <span class="tag tag-green">Python</span>
                 <span class="tag tag-peach">FastAPI</span>
@@ -366,7 +366,7 @@
               </div>
             </div>
           </div>
-          <div class="showcase-diagram" role="img" aria-label="grounded-rag pipeline: four corpora are embedded into Postgres pgvector; queries pass a router that either runs hybrid retrieval with a cross-encoder reranker and refusal gate, or calls poke-engine battle tools; Gemma writes the cited answer; an eval harness of 77 gold questions measures hit-rate, faithfulness, and refusal">
+          <div class="showcase-diagram" role="img" aria-label="grounded-rag pipeline: four corpora are embedded into Postgres pgvector; queries pass a router that either runs hybrid retrieval with a cross-encoder reranker and refusal gate, or calls poke-engine battle tools; Gemma writes the cited answer; an eval harness of 108 gold questions measures hit-rate, faithfulness, and refusal">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 258" fill="none">
               <style>
                 .gr-label { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 11px; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
@@ -388,10 +388,10 @@
               <text x="106" y="70" class="gr-sub">usage &#183; dex &#183; wiki &#183; strategy</text>
               <rect x="226" y="36" width="170" height="48" class="gr-box" fill="var(--base)" stroke="var(--blue)" />
               <text x="311" y="54" class="gr-label" fill="var(--blue)">embed &#8594; pgvector</text>
-              <text x="311" y="70" class="gr-sub">Ollama &#183; ~23k chunks</text>
+              <text x="311" y="70" class="gr-sub">Ollama &#183; ~25k chunks</text>
               <rect x="506" y="36" width="198" height="48" class="gr-box" fill="var(--base)" stroke="var(--yellow)" />
               <text x="605" y="54" class="gr-label" fill="var(--yellow)">eval harness</text>
-              <text x="605" y="70" class="gr-sub">77 gold questions &#183; 100/100/100</text>
+              <text x="605" y="70" class="gr-sub">108 gold questions &#183; 100/100/100</text>
               <path d="M196,60 L226,60" class="gr-arrow" stroke="var(--surface2)" />
               <text x="56" y="106" class="gr-group">QUERY</text>
               <rect x="16" y="120" width="80" height="48" class="gr-box" fill="var(--base)" stroke="var(--mauve)" />
