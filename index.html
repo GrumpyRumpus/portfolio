@@ -280,6 +280,79 @@
         <article class="showcase-card fade-in">
           <div class="showcase-body">
             <div class="showcase-text">
+              <h3 class="showcase-title">Crystal Broadcast</h3>
+              <p class="showcase-desc">Live AI commentary for the battles above &mdash; built on the inversion that most AI-VTuber projects get backwards. Rather than putting a language model in the driver's seat, the strong non-LLM agent plays and the LLM is a <strong>grounded observer</strong>. A <strong>beat director</strong> turns the raw battle protocol into typed events and decides which are worth saying at all (pure logic: no I/O, no wall clock, so it is replay-auditable and unit-testable); a <strong>two-persona caster</strong> speaks them as an analyst who cites and a gremlin who does not; and a <strong>presentation-clock scheduler</strong> holds each line until the viewer actually sees the moment, because the engine finishes a turn seconds before the animation does. Every factual claim is checked against the protocol, mechanics are retrieved from a citation-backed RAG, and a <strong>gold set of graded scenarios</strong> scores the commentary the way an eval suite scores a model &mdash; which is how fabricated crits, invented abilities and mis-attributed agency get caught.</p>
+              <div class="project-tags">
+                <span class="tag tag-green">Python</span>
+                <span class="tag tag-blue">WebSockets</span>
+                <span class="tag tag-mauve">Local LLM</span>
+                <span class="tag tag-teal">RAG</span>
+                <span class="tag tag-peach">Evals</span>
+              </div>
+              <div class="showcase-links">
+                <a href="https://github.com/Hugh-ONeill/crystal-broadcast" class="showcase-link" target="_blank" rel="noopener">source</a>
+                <a href="https://github.com/Hugh-ONeill/crystal-broadcast#demo" class="showcase-link" target="_blank" rel="noopener">demo clip</a>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-diagram" role="img" aria-label="Crystal Broadcast pipeline: the Showdown battle protocol feeds a beat director that emits typed events and scores which are worth saying; selected beats go to a two-persona caster, PRISM the cited analyst and FRACTURE the uncited gremlin, grounded by a citation-backed RAG and a fabrication gate; a presentation clock delays each line to match the viewer's animation, and a gold set of graded scenarios scores the output offline">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 190" fill="none">
+              <style>
+                .bc-label { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 11px; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+                .bc-sub { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 8px; fill: var(--subtext0); text-anchor: middle; dominant-baseline: central; }
+                .bc-group { font-family: 'Fira Code', 'JetBrains Mono', monospace; font-size: 9px; fill: var(--subtext0); text-anchor: middle; letter-spacing: 0.1em; }
+                .bc-box { rx: 6; ry: 6; stroke-width: 1.5; }
+                .bc-arrow { stroke-width: 1.5; fill: none; marker-end: url(#bc-ah); }
+              </style>
+              <defs>
+                <marker id="bc-ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6" fill="var(--surface2)" />
+                </marker>
+              </defs>
+              <rect width="720" height="190" fill="var(--surface0)" rx="8" ry="8" opacity="0.5" />
+              <text x="86" y="24" class="bc-group">PROTOCOL</text>
+              <text x="271" y="24" class="bc-group">DECIDE</text>
+              <text x="500" y="24" class="bc-group">SPEAK</text>
+              <!-- top row: protocol -> beat director -> the duo -->
+              <rect x="16" y="44" width="140" height="50" class="bc-box" fill="var(--base)" stroke="var(--red)" />
+              <text x="86" y="64" class="bc-label" fill="var(--red)">battle stream</text>
+              <text x="86" y="80" class="bc-sub">live Showdown turns</text>
+              <rect x="186" y="44" width="170" height="50" class="bc-box" fill="var(--base)" stroke="var(--sky)" />
+              <text x="271" y="64" class="bc-label" fill="var(--sky)">beat director</text>
+              <text x="271" y="80" class="bc-sub">typed events &#183; worth saying?</text>
+              <rect x="386" y="38" width="150" height="30" class="bc-box" fill="var(--base)" stroke="var(--teal)" />
+              <text x="461" y="53" class="bc-label" fill="var(--teal)">PRISM &#183; cited</text>
+              <rect x="386" y="76" width="150" height="30" class="bc-box" fill="var(--base)" stroke="var(--pink)" />
+              <text x="461" y="91" class="bc-label" fill="var(--pink)">FRACTURE &#183; vibes</text>
+              <path d="M156,69 L186,69" class="bc-arrow" stroke="var(--surface2)" />
+              <path d="M356,69 L370,69 L370,53 L386,53" class="bc-arrow" stroke="var(--surface2)" />
+              <path d="M356,69 L370,69 L370,91 L386,91" class="bc-arrow" stroke="var(--surface2)" />
+              <!-- grounding feeds the duo -->
+              <rect x="566" y="44" width="138" height="50" class="bc-box" fill="var(--base)" stroke="var(--green)" />
+              <text x="635" y="64" class="bc-label" fill="var(--green)">grounding</text>
+              <text x="635" y="80" class="bc-sub">RAG &#183; fabrication gate</text>
+              <path d="M566,69 L536,69" class="bc-arrow" stroke="var(--green)" />
+              <!-- second row: presentation clock -> overlay, and the eval loop -->
+              <rect x="186" y="122" width="200" height="50" class="bc-box" fill="var(--base)" stroke="var(--peach)" />
+              <text x="286" y="142" class="bc-label" fill="var(--peach)">presentation clock</text>
+              <text x="286" y="158" class="bc-sub">lands on the animation</text>
+              <rect x="416" y="122" width="170" height="50" class="bc-box" fill="var(--base)" stroke="var(--lavender)" />
+              <text x="501" y="142" class="bc-label" fill="var(--lavender)">broadcast overlay</text>
+              <text x="501" y="158" class="bc-sub">OBS &#183; browser source</text>
+              <path d="M461,106 L461,114 L286,114 L286,122" class="bc-arrow" stroke="var(--surface2)" />
+              <path d="M386,147 L416,147" class="bc-arrow" stroke="var(--surface2)" />
+              <!-- gold set scores the spoken line, offline -->
+              <rect x="16" y="122" width="140" height="50" class="bc-box" fill="var(--base)" stroke="var(--yellow)" />
+              <text x="86" y="142" class="bc-label" fill="var(--yellow)">gold set</text>
+              <text x="86" y="158" class="bc-sub">graded scenarios</text>
+              <path d="M186,147 L156,147" class="bc-arrow" stroke="var(--yellow)" />
+            </svg>
+          </div>
+        </article>
+
+        <article class="showcase-card fade-in">
+          <div class="showcase-body">
+            <div class="showcase-text">
               <h3 class="showcase-title">job-scan</h3>
               <p class="showcase-desc">Daily, resume-matched job scanner that runs itself on a timer and costs nothing to operate. Scrapes fresh postings from company ATS boards (Greenhouse, Lever, Ashby) and remote aggregators (HN "Who is hiring?", RemoteOK), drops obvious misses with cheap title/location pre-filters, then scores each survivor 0&ndash;100 against my resume with a <strong>local LLM</strong>. The model rates four independent dimensions &mdash; the final number is computed deterministically in Python, so the ranking is transparent and tunable rather than a black-box vibe. Dedupes against SQLite and delivers a ranked Markdown digest plus a Flask dashboard with application-status tracking. Runs unattended via systemd timers, no API keys.</p>
               <div class="project-tags">
